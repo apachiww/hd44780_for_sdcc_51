@@ -8,6 +8,8 @@ This library provides support for HITACHI HD44780 based character LCDs (0801, 08
 
 + カタカナ display and CGRAM operations also available
 
++ Easy-to-use formattable print function `disp_printf(format, ...)` similar to normal `printf(format, ...)`
+
 This library is designed for SDCC only, IO definitions should be modified accordingly if you are to apply it to Keil C51
 
 **Note**: During the LCD initialization, it's recommended to use disp_start_stable() rather than disp_start() 
