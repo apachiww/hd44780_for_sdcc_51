@@ -27,7 +27,7 @@
 // 1. Define your connection mode, available options are LCD_BUS_4BIT, LCD_BUS_8BIT or LCD_BUS_8P
 // 2. Define LCD_NO_RW if you do not use the R/#W pin, and soft delay will be used instead of waiting for the busy flag
 // 3. Change the definitions of IOs, XTAL_FREQ and MCU_CYCLE accordingly, this will be used in the calculation of delays later
-// 4. Define your display variant, available options are DISP_TYPE_LCD or DISP_TYPE_NORITAKE_CU20045. Brightness setting is available for VFD
+// 4. Define DISP_TYPE_NORITAKE_CU20045 and light adjust is available for the VFD
 // 5. Finally include this file in main.c
 // 6. Use the funtions to control your LCD 
 
@@ -58,9 +58,8 @@
 
 // #define LCD_NO_RW
 
-/*-------------------------Select the type of your screen----------------------------*/
+/*----Uncomment the following option to enable light adjust for Noritake CU20045-----*/
 
-#define DISP_TYPE_LCD
 // #define DISP_TYPE_NORITAKE_CU20045
 
 /*----------IO definitions. Change the definitions of IOs below accordingly----------*/
@@ -291,7 +290,7 @@ void vfd_set_light(uint8_t);                            // Set the lightness of 
 #endif
 
 
-// High level functions
+// High level functions, recommended
 
 void disp_start(uint8_t, uint8_t);                      // Start the LCD at default mode
 void disp_start_stable(uint8_t, uint8_t);               // Use this function to initialize the LCD if the power supply does not meet the requirements of power-on reset
