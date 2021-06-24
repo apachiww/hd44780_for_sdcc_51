@@ -1,4 +1,4 @@
-#include "lcd1602.h"
+#include "hd44780.h"
 
 // Basic level IO functions
 
