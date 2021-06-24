@@ -512,6 +512,10 @@ void vfd_set_light(uint8_t light) {
 // High level functions
 
 void disp_start(uint8_t row, uint8_t col) {
+
+#ifndef LCD_NO_RW
+    IO_RW = 0;
+#endif
     size_row = col;
     num_row = row;
 
@@ -538,6 +542,10 @@ void disp_start(uint8_t row, uint8_t col) {
 }
 
 void disp_start_stable(uint8_t row, uint8_t col) {
+
+#ifndef LCD_NO_RW
+    IO_RW = 0;
+#endif
     size_row = col;
     num_row = row;
 
