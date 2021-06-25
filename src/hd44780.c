@@ -2,7 +2,8 @@
 
 // Basic level IO functions
 
-void write_cmd(uint8_t cmd) {
+void write_cmd(uint8_t cmd)
+{
     IO_E = 0;
 #ifndef LCD_NO_RW
     IO_RW = 0;
@@ -22,7 +23,6 @@ void write_cmd(uint8_t cmd) {
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
-
     IO_D7 = cmd&0x08;
     IO_D6 = cmd&0x04;
     IO_D5 = cmd&0x02;
@@ -70,12 +70,12 @@ void write_cmd(uint8_t cmd) {
     return;
 }
 
-void write_4bit(uint8_t cmd) {
+void write_4bit(uint8_t cmd)
+{
     IO_E = 0;
 #ifndef LCD_NO_RW
     IO_RW = 0;
-#endif  
-
+#endif
     IO_RS = 1;
 
 #ifdef LCD_BUS_8P
@@ -86,7 +86,6 @@ void write_4bit(uint8_t cmd) {
     IO_D5 = cmd&0x20;
     IO_D4 = cmd&0x10;
 #endif
-
     IO_E = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
@@ -97,7 +96,8 @@ void write_4bit(uint8_t cmd) {
 #endif
 }
 
-void write_data(uint8_t data) {
+void write_data(uint8_t data)
+{
     IO_E = 0;
 #ifndef LCD_NO_RW
     IO_RW = 0;
@@ -117,7 +117,6 @@ void write_data(uint8_t data) {
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
-
     IO_D7 = data&0x08;
     IO_D6 = data&0x04;
     IO_D5 = data&0x02;
@@ -171,7 +170,8 @@ void write_data(uint8_t data) {
 
 // Read address and busy flag
 
-uint8_t read_bf_addr() {
+uint8_t read_bf_addr()
+{
     uint8_t addr = 0;
 
 // Initialize
@@ -270,7 +270,8 @@ uint8_t read_bf_addr() {
 
 // Read data, you have to set the address before using this function
 
-uint8_t read_data() {
+uint8_t read_data()
+{
     uint8_t data = 0;
 
 // Initialize
@@ -319,7 +320,6 @@ uint8_t read_data() {
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
-
     IO_E = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
@@ -369,7 +369,8 @@ uint8_t read_data() {
 
 // Wait when the busy flag is on
 
-void lcd_wait() {
+void lcd_wait()
+{
     while(read_bf_addr()&0x80);
     return;
 }
@@ -377,12 +378,14 @@ void lcd_wait() {
 
 // Soft delay functions
 
-void lcd_wait_2t(uint8_t t) {
+void lcd_wait_2t(uint8_t t)
+{
     while(--t);
     return;
 }
 
-void lcd_wait_512t(uint8_t t) {
+void lcd_wait_512t(uint8_t t)
+{
     uint8_t i;
     while(--t) {
         i = 255;
@@ -392,7 +395,8 @@ void lcd_wait_512t(uint8_t t) {
 }
 
 #ifdef FAST_MCU
-void lcd_wait_65kt(uint8_t t) {
+void lcd_wait_65kt(uint8_t t)
+{
     uint8_t i;
     uint8_t j;
     while(--t) {
@@ -411,13 +415,15 @@ void lcd_wait_65kt(uint8_t t) {
 
 // Clear and home functions
 
-void lcd_clear() {
+void lcd_clear()
+{
     write_cmd(CMD_CLEAR);
     DELAY_CLR;
     return;
 }
 
-void lcd_home() {
+void lcd_home()
+{
     write_cmd(CMD_HOME);
     DELAY_CLR;
     return;
@@ -425,7 +431,8 @@ void lcd_home() {
 
 // Initialzing, THE FIRST FUNCTION TO BE EXECUTED AFTER POWERON
 
-void lcd_init(uint8_t cmd) {
+void lcd_init(uint8_t cmd)
+{
     write_cmd(CMD_INIT | (cmd & 0x1F));
     DELAY_CMD;
     return;
@@ -433,13 +440,15 @@ void lcd_init(uint8_t cmd) {
 
 // Settings
 
-void lcd_set_entry(uint8_t cmd) {
+void lcd_set_entry(uint8_t cmd)
+{
     write_cmd(CMD_ENTRY | (cmd & 0x03));
     DELAY_CMD;
     return;
 }
 
-void lcd_set_disp(uint8_t cmd) {
+void lcd_set_disp(uint8_t cmd)
+{
     write_cmd(CMD_SET_DISP | (cmd & 0x07));
     DELAY_CMD;
     return;
@@ -447,7 +456,8 @@ void lcd_set_disp(uint8_t cmd) {
 
 // Move or shift
 
-void lcd_mov(uint8_t cmd) {
+void lcd_mov(uint8_t cmd)
+{
     write_cmd(CMD_MOVE | (cmd & 0x0C));
     DELAY_CMD;
     return;
@@ -455,7 +465,8 @@ void lcd_mov(uint8_t cmd) {
 
 // Data transfer
 
-void lcd_cpy_ddram(const char *data, uint8_t count) {
+void lcd_cpy_ddram(const char *data, uint8_t count)
+{
     for(uint8_t i = 0; i < count; i++) {
         write_data(*(data + i));
         DELAY_CMD;    
@@ -463,13 +474,15 @@ void lcd_cpy_ddram(const char *data, uint8_t count) {
     return;
 }
 
-void lcd_put_cur_addr(uint8_t addr) {
+void lcd_put_cur_addr(uint8_t addr)
+{
     write_cmd(CMD_SET_ADD | addr);
     DELAY_CMD;
     return;
 }
 
-void lcd_cpy_cgram(const uint8_t *data, uint8_t count) {
+void lcd_cpy_cgram(const uint8_t *data, uint8_t count)
+{
     for(uint8_t i = 0; i < count; i++) {
         write_data(*(data + i));
         DELAY_CMD;
@@ -477,21 +490,24 @@ void lcd_cpy_cgram(const uint8_t *data, uint8_t count) {
     return;
 }
 
-void lcd_put_cg_addr(uint8_t addr) {
+void lcd_put_cg_addr(uint8_t addr)
+{
     write_cmd(CMD_SET_ACG | (addr & 0x3F));
     DELAY_CMD;
     return;
 }
 
 #ifndef LCD_NO_RW
-uint8_t lcd_get_cur_addr() {
+uint8_t lcd_get_cur_addr()
+{
     return (read_bf_addr() & 0x7F);
 }
 
 #endif
 
 #ifdef DISP_TYPE_NORITAKE_CU20045
-void vfd_set_light(uint8_t light) {
+void vfd_set_light(uint8_t light)
+{
 #ifdef LCD_BUS_4BIT
     write_cmd(CMD_INIT | CMD_INIT_4_BIT);
 #endif
@@ -511,8 +527,8 @@ void vfd_set_light(uint8_t light) {
 
 // High level functions
 
-void disp_start(uint8_t row, uint8_t col) {
-
+void disp_start(uint8_t row, uint8_t col)
+{
 #ifndef LCD_NO_RW
     IO_RW = 0;
 #endif
@@ -541,8 +557,8 @@ void disp_start(uint8_t row, uint8_t col) {
     return;
 }
 
-void disp_start_stable(uint8_t row, uint8_t col) {
-
+void disp_start_stable(uint8_t row, uint8_t col)
+{
 #ifndef LCD_NO_RW
     IO_RW = 0;
 #endif
@@ -585,38 +601,45 @@ void disp_start_stable(uint8_t row, uint8_t col) {
     return;
 }
 
-void disp_clear() {
+void disp_clear()
+{
     lcd_clear();
     return;
 }
 
-void disp_home() {
+void disp_home()
+{
     lcd_home();
     return;
 }
 
-void disp_on() {
+void disp_on()
+{
     lcd_set_disp(CMD_SET_DISP_ON);
     return;
 }
 
-void disp_off() {
+void disp_off()
+{
     lcd_set_disp(CMD_SET_DISP_OFF);
     return;
 }
 
-void disp_cur_on() {
+void disp_cur_on()
+{
     lcd_set_disp(CMD_SET_DISP_ON | CMD_SET_CUR_ON | CMD_SET_BLINK_ON);
     return;
 }
 
-void disp_cur_off() {
+void disp_cur_off()
+{
     lcd_set_disp(CMD_SET_DISP_ON | CMD_SET_CUR_OFF | CMD_SET_BLINK_OFF);
     return;
 }
 
 
-void disp_put_cur(uint8_t row, uint8_t col) {
+void disp_put_cur(uint8_t row, uint8_t col)
+{
     // The number of row and column begin at 0
     uint8_t addr;
 
@@ -653,7 +676,8 @@ void disp_put_cur(uint8_t row, uint8_t col) {
 }
 
 #ifndef LCD_NO_RW
-void disp_get_cur(uint8_t *row, uint8_t *col) {
+void disp_get_cur(uint8_t *row, uint8_t *col)
+{
     uint8_t addr = lcd_get_cur_addr();
     if(num_row == 4) {
         if(addr <= 0x13) {
@@ -692,7 +716,8 @@ void disp_get_cur(uint8_t *row, uint8_t *col) {
 
 #endif
 
-void disp_shift(uint8_t orient) {
+void disp_shift(uint8_t orient)
+{
     if(!orient) {
         lcd_mov(CMD_MOVE_DISP | CMD_MOVE_LEFT);
     }
@@ -702,7 +727,8 @@ void disp_shift(uint8_t orient) {
     return;
 }
 
-void disp_curmov(uint8_t orient) {
+void disp_curmov(uint8_t orient)
+{
     if(!orient) {
         lcd_mov(CMD_MOVE_CURSOR | CMD_MOVE_LEFT);
     }
@@ -712,13 +738,15 @@ void disp_curmov(uint8_t orient) {
     return;
 }
 
-void disp_print(char c) {
+void disp_print(char c)
+{
     write_data(c);
     DELAY_CMD;
     return;
 }
 
-void disp_println(const char *data, uint8_t count) {
+void disp_println(const char *data, uint8_t count)
+{
     lcd_cpy_ddram(data, count);
     return;
 }
