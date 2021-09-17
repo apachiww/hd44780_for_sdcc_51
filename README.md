@@ -6,11 +6,21 @@ This library provides support for HITACHI HD44780 based character LCDs (0801, 08
 
 + Both 4-bit and 8-bit bus modes are supported
 
-+ カタカナ display and CGRAM operations also available
++ カタカナ display (MACRO defined) and CGRAM operations also available
 
 + Easy-to-use formattable print function `disp_printf(format, ...)` similar to normal `printf(format, ...)`
 
-This library is designed for SDCC only, IO definitions should be modified accordingly if you are to apply it to Keil C51
+> Usage:
+>
+> 1. Add both `hd44780.c` and `hd44780.h` to your project
+>
+> 2. Modify the configurations accordingly in `hd44780.h`
+>
+> 3. Include `hd44780.h` in your main.c
+>
+> 4. There are three types of functions operating at different levels. It's recommended to use the high level functions. Look them up at the end of `hd44780.h`
+
+This library is designed for SDCC only
 
 See test [examples](examples/)
 

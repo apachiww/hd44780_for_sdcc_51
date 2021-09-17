@@ -2,7 +2,7 @@
 //
 // Author:                  apachiww@github.com
 //
-// Last modified time:      2021.06.24
+// Last modified time:      2021.09.17
 //
 //
 // Experimental auto delay calculation for MCUs using different crystals and operating under 1T, 6T and 12T modes, using MACROs
