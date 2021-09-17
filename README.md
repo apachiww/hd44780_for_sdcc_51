@@ -12,14 +12,28 @@ This library provides support for HITACHI HD44780 based character LCDs (0801, 08
 
 This library is designed for SDCC only, IO definitions should be modified accordingly if you are to apply it to Keil C51
 
-**Note**: During the LCD initialization, it's recommended to use `disp_start_stable()` rather than `disp_start()`
-
 See test [examples](examples/)
 
-## Test 1: LCD1602 using 4bit bus with R/#W
+## Test: LCD1602
+
+4bit M68 bus with R/#W
 
 ![](images/test1602.jpg)
 
-## Test 2: LCD2004 using 4bit bus with R/#W
+## Test: LCD2004
+
+4bit M68 bus with R/#W
 
 ![](images/test2004.jpg)
+
+## 3: Noritake CU20045-UW VFD
+
+8bit M68 bus with R/#W
+
+![](images/vfd2004.jpg)
+
+## 4: PT6314 based VFM202MDAR2 VFD 
+
+8bit i80 bus with #RD
+
+![](images/vfd2002.jpg)

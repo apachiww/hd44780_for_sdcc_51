@@ -2,11 +2,12 @@
 
 // Basic level IO functions
 
+# ifdef IO_MODE_M68
 void write_cmd(uint8_t cmd)
 {
-    IO_E = 0;
-#ifndef LCD_NO_RW
-    IO_RW = 0;
+    IO_E_WR = 0;
+#ifndef LCD_NO_READ
+    IO_RW_RD = 0;
 #endif  
     IO_RS = 0;
 
@@ -15,11 +16,11 @@ void write_cmd(uint8_t cmd)
     IO_D6 = cmd&0x40;
     IO_D5 = cmd&0x20;
     IO_D4 = cmd&0x10;
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -27,11 +28,11 @@ void write_cmd(uint8_t cmd)
     IO_D6 = cmd&0x04;
     IO_D5 = cmd&0x02;
     IO_D4 = cmd&0x01;
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -46,11 +47,11 @@ void write_cmd(uint8_t cmd)
     IO_D2 = cmd&0x04;
     IO_D1 = cmd&0x02;
     IO_D0 = cmd&0x01;
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -58,11 +59,11 @@ void write_cmd(uint8_t cmd)
 
 #ifdef LCD_BUS_8P
     IO_D = cmd;
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -72,11 +73,11 @@ void write_cmd(uint8_t cmd)
 
 void write_4bit(uint8_t cmd)
 {
-    IO_E = 0;
-#ifndef LCD_NO_RW
-    IO_RW = 0;
+    IO_E_WR = 0;
+#ifndef LCD_NO_READ
+    IO_RW_RD = 0;
 #endif
-    IO_RS = 1;
+    IO_RS = 0;
 
 #ifdef LCD_BUS_8P
     IO_D = cmd;
@@ -86,11 +87,11 @@ void write_4bit(uint8_t cmd)
     IO_D5 = cmd&0x20;
     IO_D4 = cmd&0x10;
 #endif
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -98,9 +99,9 @@ void write_4bit(uint8_t cmd)
 
 void write_data(uint8_t data)
 {
-    IO_E = 0;
-#ifndef LCD_NO_RW
-    IO_RW = 0;
+    IO_E_WR = 0;
+#ifndef LCD_NO_READ
+    IO_RW_RD = 0;
 #endif  
     IO_RS = 1;
 
@@ -109,11 +110,11 @@ void write_data(uint8_t data)
     IO_D6 = data&0x40;
     IO_D5 = data&0x20;
     IO_D4 = data&0x10;
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -121,11 +122,11 @@ void write_data(uint8_t data)
     IO_D6 = data&0x04;
     IO_D5 = data&0x02;
     IO_D4 = data&0x01;
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -140,11 +141,11 @@ void write_data(uint8_t data)
     IO_D2 = data&0x04;
     IO_D1 = data&0x02;
     IO_D0 = data&0x01;
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -152,11 +153,81 @@ void write_data(uint8_t data)
 
 #ifdef LCD_BUS_8P
     IO_D = data;
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_EH;
 #endif
-    IO_E = 0;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+#endif
+    return;
+}
+#endif
+
+#ifdef IO_MODE_I80
+void write_cmd(uint8_t cmd)
+{
+    IO_E_WR = 1;
+#ifndef LCD_NO_READ
+    IO_RW_RD = 1;
+#endif  
+    IO_RS = 0;
+
+#ifdef LCD_BUS_4BIT
+    IO_D7 = cmd&0x80;
+    IO_D6 = cmd&0x40;
+    IO_D5 = cmd&0x20;
+    IO_D4 = cmd&0x10;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+    IO_D7 = cmd&0x08;
+    IO_D6 = cmd&0x04;
+    IO_D5 = cmd&0x02;
+    IO_D4 = cmd&0x01;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+#endif
+
+#ifdef LCD_BUS_8BIT
+    IO_D7 = cmd&0x80;
+    IO_D6 = cmd&0x40;
+    IO_D5 = cmd&0x20;
+    IO_D4 = cmd&0x10;
+    IO_D3 = cmd&0x08;
+    IO_D2 = cmd&0x04;
+    IO_D1 = cmd&0x02;
+    IO_D0 = cmd&0x01;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+#endif
+
+#ifdef LCD_BUS_8P
+    IO_D = cmd;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_W_END;
 #endif
@@ -164,9 +235,106 @@ void write_data(uint8_t data)
     return;
 }
 
+void write_4bit(uint8_t cmd)
+{
+    IO_E_WR = 1;
+#ifndef LCD_NO_READ
+    IO_RW_RD = 1;
+#endif
+    IO_RS = 0;
+
+#ifdef LCD_BUS_8P
+    IO_D = cmd;
+#else
+    IO_D7 = cmd&0x80;
+    IO_D6 = cmd&0x40;
+    IO_D5 = cmd&0x20;
+    IO_D4 = cmd&0x10;
+#endif
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+}
+
+void write_data(uint8_t data)
+{
+    IO_E_WR = 1;
+#ifndef LCD_NO_READ
+    IO_RW_RD = 1;
+#endif  
+    IO_RS = 1;
+
+#ifdef LCD_BUS_4BIT
+    IO_D7 = data&0x80;
+    IO_D6 = data&0x40;
+    IO_D5 = data&0x20;
+    IO_D4 = data&0x10;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+    IO_D7 = data&0x08;
+    IO_D6 = data&0x04;
+    IO_D5 = data&0x02;
+    IO_D4 = data&0x01;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+#endif
+
+#ifdef LCD_BUS_8BIT
+    IO_D7 = data&0x80;
+    IO_D6 = data&0x40;
+    IO_D5 = data&0x20;
+    IO_D4 = data&0x10;
+    IO_D3 = data&0x08;
+    IO_D2 = data&0x04;
+    IO_D1 = data&0x02;
+    IO_D0 = data&0x01;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+#endif
+
+#ifdef LCD_BUS_8P
+    IO_D = data;
+    IO_E_WR = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_W_EH;
+#endif
+    IO_E_WR = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_W_END;
+#endif
+#endif
+    return;
+}
+#endif
+
 // If RW is available, then read functions are available
 
-#ifndef LCD_NO_RW
+#ifndef LCD_NO_READ
+
+#ifdef IO_MODE_M68
 
 // Read address and busy flag
 
@@ -198,8 +366,8 @@ uint8_t read_bf_addr()
     IO_D = 0xFF;
 #endif
 
-    IO_E = 0;
-    IO_RW = 1; 
+    IO_E_WR = 0;
+    IO_RW_RD = 1; 
     IO_RS = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_RS2E;
@@ -208,7 +376,7 @@ uint8_t read_bf_addr()
 // Begin read
 
 #ifdef LCD_BUS_4BIT
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
 #endif
@@ -216,12 +384,12 @@ uint8_t read_bf_addr()
     addr |= IO_D6?0x40:0x00;
     addr |= IO_D5?0x20:0x00;
     addr |= IO_D4?0x10:0x00;
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
 
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
 #endif
@@ -229,14 +397,14 @@ uint8_t read_bf_addr()
     addr |= IO_D6?0x04:0x00;
     addr |= IO_D5?0x02:0x00;
     addr |= IO_D4?0x01:0x00;
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
 #endif
 
 #ifdef LCD_BUS_8BIT
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
 #endif
@@ -248,19 +416,19 @@ uint8_t read_bf_addr()
     addr |= IO_D2?0x04:0x00;
     addr |= IO_D1?0x02:0x00;
     addr |= IO_D0?0x01:0x00;
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
 #endif
 
 #ifdef LCD_BUS_8P
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
 #endif
     addr = IO_D;
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
@@ -298,8 +466,8 @@ uint8_t read_data()
     IO_D = 0xFF;
 #endif
 
-    IO_E = 0;
-    IO_RW = 1; 
+    IO_E_WR = 0;
+    IO_RW_RD = 1; 
     IO_RS = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_RS2E;
@@ -308,7 +476,7 @@ uint8_t read_data()
 // Begin read
 
 #ifdef LCD_BUS_4BIT
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
 #endif
@@ -316,11 +484,11 @@ uint8_t read_data()
     data |= IO_D6?0x40:0x00;
     data |= IO_D5?0x20:0x00;
     data |= IO_D4?0x10:0x00;
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
 #endif
@@ -328,14 +496,14 @@ uint8_t read_data()
     data |= IO_D6?0x04:0x00;
     data |= IO_D5?0x02:0x00;
     data |= IO_D4?0x01:0x00;
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
 #endif
 
 #ifdef LCD_BUS_8BIT
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
 #endif
@@ -347,25 +515,230 @@ uint8_t read_data()
     data |= IO_D2?0x04:0x00;
     data |= IO_D1?0x02:0x00;
     data |= IO_D0?0x01:0x00;
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
 #endif
 
 #ifdef LCD_BUS_8P
-    IO_E = 1;
+    IO_E_WR = 1;
 #ifdef FAST_MCU
     FN_DELAYT_R_E2D;
 #endif
     data = IO_D;
-    IO_E = 0;
+    IO_E_WR = 0;
 #ifdef FAST_MCU
     FN_DELAYT_R_END;
 #endif
 #endif
     return data;
 }
+
+#endif
+
+#ifdef IO_MODE_I80
+
+// Read address and busy flag
+
+uint8_t read_bf_addr()
+{
+    uint8_t addr = 0;
+
+// Initialize
+    IO_E_WR = 1;
+    IO_RW_RD = 1; 
+    IO_RS = 0;
+
+#ifdef LCD_BUS_4BIT
+    IO_D7 = 1;
+    IO_D6 = 1;
+    IO_D5 = 1;
+    IO_D4 = 1;
+#endif
+
+#ifdef LCD_BUS_8BIT
+    IO_D7 = 1;
+    IO_D6 = 1;
+    IO_D5 = 1;
+    IO_D4 = 1;
+    IO_D3 = 1;
+    IO_D2 = 1;
+    IO_D1 = 1;
+    IO_D0 = 1;
+#endif
+
+#ifdef LCD_BUS_8P
+    IO_D = 0xFF;
+#endif
+
+#ifdef FAST_MCU
+    FN_DELAYT_R_RS2E;
+#endif
+
+// Begin read
+
+#ifdef LCD_BUS_4BIT
+    IO_RW_RD = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_R_E2D;
+#endif
+    addr |= IO_D7?0x80:0x00;
+    addr |= IO_D6?0x40:0x00;
+    addr |= IO_D5?0x20:0x00;
+    addr |= IO_D4?0x10:0x00;
+    IO_RW_RD = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_R_END;
+#endif
+
+    IO_RW_RD = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_R_E2D;
+#endif
+    addr |= IO_D7?0x08:0x00;
+    addr |= IO_D6?0x04:0x00;
+    addr |= IO_D5?0x02:0x00;
+    addr |= IO_D4?0x01:0x00;
+    IO_RW_RD = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_R_END;
+#endif
+#endif
+
+#ifdef LCD_BUS_8BIT
+    IO_RW_RD = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_R_E2D;
+#endif
+    addr |= IO_D7?0x80:0x00;
+    addr |= IO_D6?0x40:0x00;
+    addr |= IO_D5?0x20:0x00;
+    addr |= IO_D4?0x10:0x00;
+    addr |= IO_D3?0x08:0x00;
+    addr |= IO_D2?0x04:0x00;
+    addr |= IO_D1?0x02:0x00;
+    addr |= IO_D0?0x01:0x00;
+    IO_RW_RD = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_R_END;
+#endif
+#endif
+
+#ifdef LCD_BUS_8P
+    IO_RW_RD = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_R_E2D;
+#endif
+    addr = IO_D;
+    IO_RW_RD = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_R_END
+#endif
+#endif
+    return addr;
+}
+
+// Read data, you have to set the address before using this function
+
+uint8_t read_data()
+{
+    uint8_t data = 0;
+
+// Initialize
+    IO_E_WR = 1;
+    IO_RW_RD = 1; 
+    IO_RS = 1;
+
+#ifdef LCD_BUS_4BIT
+    IO_D7 = 1;
+    IO_D6 = 1;
+    IO_D5 = 1;
+    IO_D4 = 1;
+#endif
+
+#ifdef LCD_BUS_8BIT
+    IO_D7 = 1;
+    IO_D6 = 1;
+    IO_D5 = 1;
+    IO_D4 = 1;
+    IO_D3 = 1;
+    IO_D2 = 1;
+    IO_D1 = 1;
+    IO_D0 = 1;
+#endif
+
+#ifdef LCD_BUS_8P
+    IO_D = 0xFF;
+#endif
+
+#ifdef FAST_MCU
+    FN_DELAYT_R_RS2E;
+#endif
+
+// Begin read
+
+#ifdef LCD_BUS_4BIT
+    IO_RW_RD = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_R_E2D;
+#endif
+    data |= IO_D7?0x80:0x00;
+    data |= IO_D6?0x40:0x00;
+    data |= IO_D5?0x20:0x00;
+    data |= IO_D4?0x10:0x00;
+    IO_RW_RD = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_R_END;
+#endif
+    IO_RW_RD = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_R_E2D;
+#endif
+    data |= IO_D7?0x08:0x00;
+    data |= IO_D6?0x04:0x00;
+    data |= IO_D5?0x02:0x00;
+    data |= IO_D4?0x01:0x00;
+    IO_RW_RD = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_R_END;
+#endif
+#endif
+
+#ifdef LCD_BUS_8BIT
+    IO_RW_RD = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_R_E2D;
+#endif
+    data |= IO_D7?0x80:0x00;
+    data |= IO_D6?0x40:0x00;
+    data |= IO_D5?0x20:0x00;
+    data |= IO_D4?0x10:0x00;
+    data |= IO_D3?0x08:0x00;
+    data |= IO_D2?0x04:0x00;
+    data |= IO_D1?0x02:0x00;
+    data |= IO_D0?0x01:0x00;
+    IO_RW_RD = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_R_END;
+#endif
+#endif
+
+#ifdef LCD_BUS_8P
+    IO_RW_RD = 0;
+#ifdef FAST_MCU
+    FN_DELAYT_R_E2D;
+#endif
+    data = IO_D;
+    IO_RW_RD = 1;
+#ifdef FAST_MCU
+    FN_DELAYT_R_END;
+#endif
+#endif
+    return data;
+}
+
+#endif
 
 // Wait when the busy flag is on
 
@@ -497,7 +870,7 @@ void lcd_put_cg_addr(uint8_t addr)
     return;
 }
 
-#ifndef LCD_NO_RW
+#ifndef LCD_NO_READ
 uint8_t lcd_get_cur_addr()
 {
     return (read_bf_addr() & 0x7F);
@@ -527,41 +900,23 @@ void vfd_set_light(uint8_t light)
 
 // High level functions
 
-void disp_start(uint8_t row, uint8_t col)
-{
-#ifndef LCD_NO_RW
-    IO_RW = 0;
-#endif
-    size_row = col;
-    num_row = row;
-
-    FN_DELAY_PWRON;
-
-#ifdef LCD_BUS_4BIT
-    // 4bit BUS mode requires row setting twice 
-    write_4bit(0x20);
-    if(row == 1)
-    lcd_init(CMD_INIT_4_BIT | CMD_INIT_8_FONT | CMD_INIT_1_LINE);
-    else
-    lcd_init(CMD_INIT_4_BIT | CMD_INIT_8_FONT | CMD_INIT_2_LINE);
-#endif
-
-#if defined(LCD_BUS_8BIT) || defined(LCD_BUS_8P)
-    if(row == 1)
-    lcd_init(CMD_INIT_8_BIT | CMD_INIT_8_FONT | CMD_INIT_1_LINE);
-    else
-    lcd_init(CMD_INIT_8_BIT | CMD_INIT_8_FONT | CMD_INIT_2_LINE);
-#endif
-    // Turn on display
-    lcd_set_disp(CMD_SET_DISP_ON | CMD_SET_CUR_OFF | CMD_SET_BLINK_OFF);
-    return;
-}
-
 void disp_start_stable(uint8_t row, uint8_t col)
 {
-#ifndef LCD_NO_RW
-    IO_RW = 0;
+    IO_RS = 0;
+#ifdef IO_MODE_M68
+    IO_E_WR = 0;
+#ifndef LCD_NO_READ
+    IO_RW_RD = 0;
 #endif
+#endif
+
+#ifdef IO_MODE_I80
+    IO_E_WR = 1;
+#ifndef LCD_NO_READ
+    IO_RW_RD = 1;
+#endif
+#endif
+
     size_row = col;
     num_row = row;
 
@@ -675,7 +1030,7 @@ void disp_put_cur(uint8_t row, uint8_t col)
     return;
 }
 
-#ifndef LCD_NO_RW
+#ifndef LCD_NO_READ
 void disp_get_cur(uint8_t *row, uint8_t *col)
 {
     uint8_t addr = lcd_get_cur_addr();

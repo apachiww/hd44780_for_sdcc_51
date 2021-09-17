@@ -25,7 +25,7 @@
 
 // Usage:
 // 1. Define your connection mode, available options are LCD_BUS_4BIT, LCD_BUS_8BIT or LCD_BUS_8P
-// 2. Define LCD_NO_RW if you do not use the R/#W pin, and soft delay will be used instead of waiting for the busy flag
+// 2. Define LCD_NO_READ if you do not use the read function, and soft delay will be used instead of waiting for the busy flag
 // 3. Change the definitions of IOs, XTAL_FREQ and MCU_CYCLE accordingly, this will be used in the calculation of delays later
 // 4. Define DISP_TYPE_NORITAKE_CU20045 and light adjust is available for the VFD
 // 5. Finally include this file in main.c
@@ -50,26 +50,30 @@
 #define XTAL_FREQ 11059200
 #define MCU_CYCLE 12
 
+/*------------------------------Select your IO Mode----------------------------------*/
+
+// #define IO_MODE_I80
+#define IO_MODE_M68
+
 /*---------------------------Select your connect mode--------------------------------*/
 
 // #define LCD_BUS_4BIT
 // #define LCD_BUS_8BIT
 #define LCD_BUS_8P
 
-// #define LCD_NO_RW
+// #define LCD_NO_READ
 
-/*----Uncomment the following option to enable light adjust for Noritake CU20045-----*/
+/*----------Uncomment the following option to enable light adjust for VFDS-----------*/
 
 // #define DISP_TYPE_NORITAKE_CU20045
 
 /*----------IO definitions. Change the definitions of IOs below accordingly----------*/
 
-#define IO_RS   P1_0
-#define IO_RW   P1_1
-#define IO_E    P1_2
-
-#ifdef  LCD_NO_RW
-#undef  IO_RW
+#define IO_RS       P1_0    // The RS pin 
+#define IO_RW_RD    P1_1    // RW pin in m68 mode or RD pin in i80 mode. Notice that usually the RW pin in m68 mode is multiplexed with WR in i80 mode
+#define IO_E_WR     P1_2    // Enable pin in m68 mode or WR pin in i80 mode
+#ifdef  LCD_NO_READ
+#undef  IO_RW_RD
 #endif
 
 #ifdef  LCD_BUS_4BIT
@@ -118,16 +122,16 @@
 #define FN_DELAYT_W_EH          lcd_wait_2t((450/INST_CYCLE_NS)/2 + 1)              // Enable High status delay
 #define FN_DELAYT_W_END         lcd_wait_2t((400/INST_CYCLE_NS)/2 + 1)              // Delay after an operation finishes
 
-#ifndef LCD_NO_RW
+#ifndef LCD_NO_READ
 #define FN_DELAYT_R_RS2E        lcd_wait_2t((60/INST_CYCLE_NS)/2 + 1)               // Delay before E goes high while reading 
 #define FN_DELAYT_R_E2D         lcd_wait_2t((360/INST_CYCLE_NS)/2 + 1)              // Delay before data is ready
 #define FN_DELAYT_R_END         lcd_wait_2t((400/INST_CYCLE_NS)/2 + 1)              // Delay after an operation finishes
 #endif
 #endif
 
-// If R/#W available, check busy flag rather than soft delay
+// If read function available, check busy flag rather than soft delay
 
-#ifndef LCD_NO_RW
+#ifndef LCD_NO_READ
 #define DELAY_CMD lcd_wait()
 #define DELAY_CLR lcd_wait()
 #else
@@ -253,7 +257,7 @@ void write_cmd(uint8_t);
 void write_4bit(uint8_t);
 void write_data(uint8_t);
 
-#ifndef LCD_NO_RW
+#ifndef LCD_NO_READ
 uint8_t read_bf_addr();
 uint8_t read_data();
 void lcd_wait();                // Wait for BF before write data
@@ -281,7 +285,7 @@ void lcd_put_cur_addr(uint8_t);                         // Set the cursor locati
 void lcd_cpy_cgram(const uint8_t *, uint8_t);           // Use this function to write muitiple bytes to CGRAM
 void lcd_put_cg_addr(uint8_t);                          // Set direct address in CGRAM (00H~3FH)
 
-#ifndef LCD_NO_RW         
+#ifndef LCD_NO_READ         
 uint8_t lcd_get_cur_addr();                             // Get the address of cursor 
 #endif
 
@@ -292,7 +296,6 @@ void vfd_set_light(uint8_t);                            // Set the lightness of 
 
 // High level functions, recommended
 
-void disp_start(uint8_t, uint8_t);                      // Start the LCD at default mode
 void disp_start_stable(uint8_t, uint8_t);               // Use this function to initialize the LCD if the power supply does not meet the requirements of power-on reset
 void disp_clear();                                      // Clear LCD. Identical to lcd_clear()
 void disp_home();                                       // Cursor home. Identical to lcd_home()
@@ -303,7 +306,7 @@ void disp_cur_on();                                     // Cursor blink on
 void disp_cur_off();                                    // Cursor blink off
 
 void disp_put_cur(uint8_t, uint8_t);                    // Set cursor position
-#ifndef LCD_NO_RW
+#ifndef LCD_NO_READ
 void disp_get_cur(uint8_t *, uint8_t *);                // Get cursor position
 #endif
 
