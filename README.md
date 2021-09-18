@@ -4,7 +4,7 @@ This library provides support for HITACHI HD44780 based character LCDs (0801, 08
 
 + Suitable for 8051 based MCUs with various crystals and instruction cycles (1T, 6T, 12T) as AUTOMATIC delay calculation is available
 
-+ Both 4-bit and 8-bit bus modes are supported
++ 4bit or 8bit M68 and i80 interface supported
 
 + カタカナ display (MACRO defined) and CGRAM operations also available
 
@@ -24,26 +24,26 @@ This library is designed for SDCC only
 
 See test [examples](examples/)
 
-## Test: LCD1602
+## Test with LCD1602
 
-4bit M68 bus with R/#W
+4bit M68 interface with R/#W
 
 ![](images/test1602.jpg)
 
-## Test: LCD2004
+## Test with LCD2004
 
-4bit M68 bus with R/#W
+4bit M68 interface with R/#W
 
 ![](images/test2004.jpg)
 
-## 3: Noritake CU20045-UW VFD
+## Test with Noritake CU20045-UW VFD
 
-8bit M68 bus with R/#W
+8bit M68 interface with R/#W
 
 ![](images/vfd2004.jpg)
 
-## 4: PT6314 based VFM202MDAR2 VFD 
+## Test with PT6314 based VFM202MDAR2 VFD 
 
-8bit i80 bus with #RD
+8bit i80 interfase with #RD
 
 ![](images/vfd2002.jpg)
