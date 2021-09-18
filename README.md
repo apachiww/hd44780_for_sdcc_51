@@ -44,6 +44,6 @@ See test [examples](examples/)
 
 ## Test with PT6314 based VFM202MDAR2 VFD 
 
-8bit i80 interfase with #RD
+8bit i80 interface with #RD
 
 ![](images/vfd2002.jpg)
