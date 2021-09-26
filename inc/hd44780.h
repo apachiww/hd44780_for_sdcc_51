@@ -2,8 +2,9 @@
 //
 // Author:                  apachiww@github.com
 //
-// Last modified time:      2021.09.17
+// Last modified time:      2021.09.26
 //
+// YOU MUST SETUP IOs IN THIS HEAD FILE AS 8051 DOES NOT SUPPORT INDIRECT ACCESS OF SFRs, they cannot be used as function arguments in SDCC
 //
 // Experimental auto delay calculation for MCUs using different crystals and operating under 1T, 6T and 12T modes, using MACROs
 //
@@ -13,15 +14,13 @@
 //
 // To make use of カタカナ characters, just use the definitions below in your char[]
 //
-// YOU MUST SETUP IOs IN THIS HEAD FILE AS 8051 DOES NOT SUPPORT INDIRECT ACCESS OF SFRs, they cannot be used as function arguments
-//
-// The common LCDs support 6 connection modes (Parallel IO):
-// 4bit-bus:            Use pins D5~D7 only, plus RS for register selection, R/#W for read/write selection and E for data latch
-// 4bit-bus-no-wr:      Same as 4bit-bus mode, but no reading, R/#W is grounded and no extra IO is needed for R/#W
-// 8bit-bus:            Same as 4bit-bus except that it uses all pins D0~D7
-// 8bit-bus-no-wr:      Same as 8bit-bus mode with no R/#W
-// 8bit-bus-port:       Same as 8bit-bus mode, but uses the whole group IO e.g. P2
-// 8bit-bus-port-no-wr: No R/#W
+// The common LCDs support 6 connection modes (Parallel M68 or i80 interface):
+// 4bit-bus:                Use pins D5~D7 only, plus RS for register selection, R/#W for read/write selection and E for data latch (or #WR for write and #RD for read)
+// 4bit-bus-no-read:        Same as 4bit-bus mode, but no read, R/#W is grounded (#WR connected to VCC)
+// 8bit-bus:                Same as 4bit-bus except that it uses all pins D0~D7
+// 8bit-bus-no-read:        Same as 8bit-bus mode with no read
+// 8bit-bus-port:           Same as 8bit-bus mode, but uses the whole group IO e.g. P2
+// 8bit-bus-port-no-read:   No read
 
 // Usage:
 // 1. Define your connection mode, available options are LCD_BUS_4BIT, LCD_BUS_8BIT or LCD_BUS_8P
@@ -63,9 +62,10 @@
 
 // #define LCD_NO_READ
 
-/*----------Uncomment the following option to enable light adjust for VFDS-----------*/
+/*----------Uncomment the following options to enable light adjust for VFDs----------*/
 
 // #define DISP_TYPE_NORITAKE_CU20045
+// #define DISP_TYPE_PT6314
 
 /*----------IO definitions. Change the definitions of IOs below accordingly----------*/
 
@@ -290,13 +290,16 @@ uint8_t lcd_get_cur_addr();                             // Get the address of cu
 #endif
 
 #ifdef DISP_TYPE_NORITAKE_CU20045
-void vfd_set_light(uint8_t);                            // Set the lightness of the VFD, from 0 to 3 
+void vfd_set_light_cu20045(uint8_t);                    // Set the lightness of the VFD, from 0 to 3 
 #endif
 
+#ifdef DISP_TYPE_PT6314
+void vfd_set_light_pt6314(uint8_t);                     // Set the lightness of the VFD, from 0 to 3 
+#endif
 
 // High level functions, recommended
 
-void disp_start_stable(uint8_t, uint8_t);               // Use this function to initialize the LCD if the power supply does not meet the requirements of power-on reset
+void disp_start(uint8_t, uint8_t);                      // Use this function to initialize the LCD if the power supply does not meet the requirements of power-on reset
 void disp_clear();                                      // Clear LCD. Identical to lcd_clear()
 void disp_home();                                       // Cursor home. Identical to lcd_home()
 

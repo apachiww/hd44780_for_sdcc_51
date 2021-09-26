@@ -879,7 +879,7 @@ uint8_t lcd_get_cur_addr()
 #endif
 
 #ifdef DISP_TYPE_NORITAKE_CU20045
-void vfd_set_light(uint8_t light)
+void vfd_set_light_cu20045(uint8_t light)
 {
 #ifdef LCD_BUS_4BIT
     write_cmd(CMD_INIT | CMD_INIT_4_BIT);
@@ -894,13 +894,37 @@ void vfd_set_light(uint8_t light)
     DELAY_CMD;
     return;
 }
-
 #endif
 
+#ifdef DISP_TYPE_PT6314
+void vfd_set_light_pt6314(uint8_t light)
+{
+#ifdef LCD_BUS_4BIT
+    if(size_row == 1) {
+        lcd_init(CMD_INIT_4_BIT |  CMD_INIT_8_FONT | CMD_INIT_1_LINE | (light & 0x03));
+    }
+    else {
+        lcd_init(CMD_INIT_4_BIT |  CMD_INIT_8_FONT | CMD_INIT_2_LINE | (light & 0x03));
+    }
+#endif
+
+#if defined (LCD_BUS_8BIT) || defined (LCD_BUS_8P)
+    if(size_row == 1) {
+        lcd_init(CMD_INIT_8_BIT |  CMD_INIT_8_FONT | CMD_INIT_1_LINE | (light & 0x03));
+    }
+    else {
+        lcd_init(CMD_INIT_8_BIT |  CMD_INIT_8_FONT | CMD_INIT_2_LINE | (light & 0x03));
+    }
+#endif
+
+    DELAY_CMD;
+    return;
+}
+#endif
 
 // High level functions
 
-void disp_start_stable(uint8_t row, uint8_t col)
+void disp_start(uint8_t row, uint8_t col)
 {
     IO_RS = 0;
 #ifdef IO_MODE_M68
