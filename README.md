@@ -44,6 +44,8 @@ See test [examples](examples/)
 
 ## Test with PT6314 based VFM202MDAR2 VFD 
 
+> This VFD module was possibly produced by BOE. Actually it's almost identical to [FUTABA M202MD15FA](https://docs.rs-online.com/8cb4/0900766b814aa03e.pdf).
+
 8bit i80 interface with #RD
 
 ![](images/vfd2002.jpg)
