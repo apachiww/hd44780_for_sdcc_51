@@ -1,5 +1,10 @@
 #include "hd44780.h"
 
+// Variables
+
+static uint8_t size_row;
+static uint8_t num_row;
+
 // Basic level IO functions
 
 # ifdef IO_MODE_M68

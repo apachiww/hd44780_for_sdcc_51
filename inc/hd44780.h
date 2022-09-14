@@ -245,12 +245,6 @@
 #define CMD_SET_ADD             0x80
 
 
-// Variables
-
-static uint8_t size_row;
-static uint8_t num_row;
-
-
 // Basic level IO functions
 
 void write_cmd(uint8_t);
